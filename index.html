@@ -325,34 +325,52 @@ mark.blue {
     <li>Se pueden añadir estilos usando <i>style</i></li>
   </ul>
 </section>
-<section>
+<section id="tools">
   <h3 class="blue">¿Que otras herramientas ofrece D3?</h3>
-  <ul>
-    <li>Páginas dinámicas
-      <ul>
-      <li>Eventos</li>
-      <li>Transiciones</li>
-      <li>Drag/Zoom</li>
-      </li>
-      </ul>
-    </li>
-    <li>Herramientas para gráficos
-      <ul>
-      <li>Escalas</li>
-      <li>Ejes</li>
-      <li>Funciones de tiempo</li>
-      <li>Funciones con colores</li>
-    </ul>
-  </li>
-  <li>Layouts</li>
-  <li>Funciones Geográficas</li>
-  </ul>
+  
+  <div id="toolsDiv"></div>
+  <div id="toolsTitle"></div>
+  <pre><code class="JavaScript" id="toolsCode">svg.selectAll("circle")
+    .data([32, 57, 112])
+    .enter()
+    .append("circle")
+    .attr("cy", 30)
+    .attr("cx", function(d, i) { return i * 50 + 10; })
+    .attr("r", function(d) { return Math.sqrt(d); })
+    .style("fill", "red");</code></pre>
+</section>
 
+<section id="tools2">
+  <h3 class="blue">¿Que otras herramientas ofrece D3?</h3>
+  
+  <div id="tools2Div"></div>
+  <div id="tools2Title"></div>
+  <pre><code class="JavaScript" id="tools2Code">var scale = d3.scale.linear()
+    .domain([30, 120])
+    .range([10, 30]);
+      
+    svg.selectAll("circle")
+    .data([32, 57, 112])
+    .enter()
+    .append("circle")
+    .attr("cy", 30)
+    .attr("cx", function(d, i) { return i * 50 + 10; })
+    .attr("r", function(d) { return scale(d); })
+    .style("fill", "red");</code></pre>
 </section>
 
 <section>
   <h3 class="blue">Layouts</h3>
   <a href="http://d3js.org/"><img src="layouts.jpg"/></a>
+</section>
+<section>
+  <h3 class="blue">Funciones Geográficas</h3>
+  <ul>
+    <li><a href="https://github.com/mbostock/d3/wiki/Geo-Projections">Proyecciones</a></li>
+    <li><a href="http://bl.ocks.org/rveciana/fcba0c3e2294492f8e3a">Gratículas</a></li>
+    <li><a href="http://bl.ocks.org/mbostock/4090870">GeoJSON/TopoJSON</a></li>
+    <li><a href="http://bl.ocks.org/mbostock/2206590">Áreas, longitudes, centroides</a> y <a href="http://bl.ocks.org/mbostock/4206810">otros cálculos sencillos</a> y <a href="http://bl.ocks.org/mbostock/4525362">no tan sencillos</a></li>
+  </ul>
 </section>
 <link rel="stylesheet" type="text/css" href="highlight/styles/monokai_sublime.css"> 
 <script type="text/javascript" src="highlight/highlight.pack.js"></script>
@@ -370,16 +388,331 @@ mark.blue {
       .on("activate", activate)
       .on("deactivate", deactivate);
 
+  var section = d3.selectAll("section");
+  var tools = d3.select("#tools");
+  var toolsIndex = section[0].indexOf(tools.node());
+
+  var tools2 = d3.select("#tools2");
+  var tools2Index = section[0].indexOf(tools2.node());
  
   function activate(d, i) {
-
+    if (i === toolsIndex) startTools();
+    if (i === tools2Index) startTools2();
   }
 
   function deactivate(d, i) {
+    if (i === toolsIndex) stopTools();
+    if (i === tools2Index) stopTools2();
   }
 
   
-  
+  function startTools(){
+    var num_click = 0;
+    var title = d3.select("#toolsTitle");
+    title.text("Páginas dinámicas");
+    var code = d3.select("#toolsCode");
+
+    var svg = d3.select("#toolsDiv").append("svg")
+    .attr("width", 200)
+    .attr("height", 70);
+    
+    svg.selectAll("circle")
+    .data([32, 57, 112])
+    .enter()
+    .append("circle")
+    .attr("cy", 30)
+    .attr("cx", function(d, i) { return i * 50 + 10; })
+    .attr("r", function(d) { return Math.sqrt(d); })
+    .style("fill", "red");
+    
+    svg.on("click", function(d) {
+        num_click++;
+        if(num_click==1){
+          
+          title.text("Eventos");
+          title.transition()
+          .duration(2000)
+          .style("color", "orange");
+
+          code.text("svg.on('mouseover', function(d){ \n\
+            d3.select(this)\n\
+            .selectAll(\"circle\")\n\
+            .attr(\"r\", function(d) { return Math.sqrt(d) + 5; });\n\
+            });\n\
+            svg.on('mouseout', function(d){\n\
+            \n\
+            d3.select(this)\n\
+            .selectAll(\"circle\")\n\
+            .attr(\"r\", function(d) { return Math.sqrt(d); });\n\
+             });");
+
+          svg.on('mouseover', function(d){
+            
+            d3.select(this)
+            .selectAll("circle")
+            .attr("r", function(d) { return Math.sqrt(d) + 5; });
+          });
+
+          svg.on('mouseout', function(d){
+            
+            d3.select(this)
+            .selectAll("circle")
+            .attr("r", function(d) { return Math.sqrt(d); });
+          });
+
+        }else if(num_click==2){
+          title.text("Transiciones");
+          title.transition()
+          .duration(2000)
+          .style("color", "orange");
+
+          code.text(".selectAll(\"circle\")\n\
+            .transition()\n\
+            .duration(1500)\n\
+            .attr(\"r\", function(d) { return Math.sqrt(d) + 5; });");
+
+          svg.on('mouseover', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .attr("r", function(d) { return Math.sqrt(d) + 5; });
+          });
+
+          svg.on('mouseout', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .attr("r", function(d) { return Math.sqrt(d); });
+          });
+        } else if(num_click==3){
+          title.text("Más transiciones");
+
+          code.text(".selectAll(\"circle\")\n\
+            .transition()\n\
+            .duration(1500)\n\
+            .delay(function(d,i){return 1000*i;})\n\
+            .attr(\"r\", function(d) { return Math.sqrt(d) + 5; })\n\
+            .style(\"fill\", \"yellow\");");
+
+
+          svg.on('mouseover', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d) + 5; })
+            .style("fill", "yellow");
+          });
+
+          svg.on('mouseout', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d); })
+            .style("fill", "red");
+          });
+        } else if(num_click==4){
+          title.text("Transiciones encadenadas");
+
+          code.text(".selectAll(\"circle\")\n\
+            .transition()\n\
+            .duration(1500)\n\
+            .delay(function(d,i){return 1000*i;})\n\
+            .attr(\"r\", function(d) { return Math.sqrt(d) + 5; })\n\
+            .style(\"fill\", \"yellow\")\n\
+            .transition()\n\
+            .attr(\"cx\", function(d, i) { return i * 70 + 10; });");
+
+
+          svg.on('mouseover', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d) + 5; })
+            .style("fill", "yellow")
+            .transition()
+            .attr("cx", function(d, i) { return i * 70 + 10; });
+          });
+
+          svg.on('mouseout', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d); })
+            .style("fill", "red")
+            .attr("cx", function(d, i) { return i * 50 + 10; });
+          });
+        } else if(num_click==5){
+          title.text("Zoom/Pan");
+
+
+          code.text("function zoomed() {\n\
+            svg.attr(\"transform\", \"translate(\" + d3.event.translate + \")scale(\" + d3.event.scale + \")\");\n\
+          }\n\
+          var zoom = d3.behavior.zoom()\n\
+          .translate([0, 0])\n\
+          .on(\"zoom\", zoomed);\n\
+          svg\n\
+            .call(zoom)\n\
+            .call(zoom.event);");
+
+
+          function zoomed() {
+            svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+          }
+
+          var zoom = d3.behavior.zoom()
+          .translate([0, 0])
+          .on("zoom", zoomed);
+
+          svg
+            .call(zoom)
+            .call(zoom.event);
+
+          
+
+          svg.on('mouseover', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d) + 5; })
+            .style("fill", "yellow")
+            .transition()
+            .attr("cx", function(d, i) { return i * 70 + 10; });
+          });
+
+          svg.on('mouseout', function(d){
+            d3.select(this)
+            .selectAll("circle")
+            .transition()
+            .duration(1500)
+            .delay(function(d,i){return 1000*i;})
+            .attr("r", function(d) { return Math.sqrt(d); })
+            .style("fill", "red")
+            .attr("cx", function(d, i) { return i * 50 + 10; });
+          });
+        }
+    });
+    }
+
+  /*
+
+    <li>Herramientas para gráficos
+      <ul>
+      <li>Escalas</li>
+      <li>Ejes</li>
+      <li>Funciones de tiempo</li>
+      <li>Funciones con colores</li>
+    </ul>
+  </li>
+  <li>Layouts</li>
+  <li>Funciones Geográficas</li>
+  */
+  function stopTools(){
+    console.info("stop");
+    var svg = d3.select("#toolsDiv").selectAll("svg");
+    svg.remove();
+
+  }
+
+  function startTools2(){
+    var num_click = 0;
+    var title = d3.select("#tools2Title");
+    title.text("Consideremos los mismos círculos");
+    var code = d3.select("#tools2Code");
+
+    var scale = d3.scale.linear()
+    .domain([30, 120])
+    .range([2, 30]);
+
+    var svg = d3.select("#tools2Div").append("svg")
+    .attr("width", 200)
+    .attr("height", 70);
+    
+    svg.selectAll("circle")
+    .data([32, 57, 112])
+    .enter()
+    
+    .append("circle")
+    .attr("cy", 30)
+    .attr("cx", function(d, i) { return i * 50 + 10; })
+    .attr("r", function(d) { return scale(d); })
+    .style("fill", "red");
+    
+    svg.on("click", function(d) {
+        num_click++;
+        if(num_click==1){
+          title.text("Escalas logarítmicas, cuadráticas...");
+
+          code.text("var scale = d3.scale.log()\n\
+          .domain([30, 120])\n\
+          .range([10, 30]);\n\
+          \n\
+          svg.selectAll(\"circle\")\n\
+          .transition()\n\
+          .attr(\"r\", function(d) { console.info(d); return scale(d); });");
+          var scale = d3.scale.log()
+          .domain([30, 120])
+          .range([10, 30]);
+
+          svg.selectAll("circle")
+          .transition()
+          .attr("r", function(d) { return scale(d); });
+
+        } else if(num_click==2){
+          title.text("Escalas de colores");
+          code.text("var colorScale = d3.scale.category10()\n\
+          .domain([20,120]);\n\
+          \n\
+          svg.selectAll(\"circle\")\n\
+          .transition()\n\
+          .style(\"fill\", function(d) { return colorScale(d); });");
+
+          var colorScale = d3.scale.category10()
+          .domain([20,120]);
+          
+          svg.selectAll("circle")
+          .transition()
+          .style("fill", function(d) { return colorScale(d); });
+        } else if(num_click==3){
+          title.text("Funciones con los colores");
+          code.text("var colorScale = d3.scale.category10()\n\
+          .domain([20,120]);\n\
+          \n\
+          svg.selectAll(\"circle\")\n\
+          .transition()\n\
+          .style(\"fill\", function(d) { return d3.rgb(colorScale(d)).brighter(); });");
+
+          var colorScale = d3.scale.category10()
+          .domain([20,120]);
+          
+          svg.selectAll("circle")
+          .transition()
+          .duration(2000)
+          .style("fill", function(d) { return d3.rgb(colorScale(d)).brighter(); });
+          
+        }
+    });
+  }
+
+
+  function stopTools2(){
+    console.info("stop");
+    var svg = d3.select("#tools2Div").selectAll("svg");
+    svg.remove();
+
+  }
 
 </script>
 </body>
