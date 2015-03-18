@@ -376,6 +376,34 @@ mark.blue {
     <li><a href="http://bl.ocks.org/mbostock/2206590">Áreas, longitudes, centroides</a> y <a href="http://bl.ocks.org/mbostock/4206810">otros cálculos sencillos</a> y <a href="http://bl.ocks.org/mbostock/4525362">no tan sencillos</a></li>
   </ul>
 </section>
+<section>
+  <h3 class="blue">Ejemplos del taller</h3>
+  <ul>
+    <li><a href="http://jsbin.com/sefuka/2/edit">Gráfico simple</a>
+    <ul>
+      <li><a href="http://jsbin.com/nusufo/1/edit">Añadir transición + texto</a></li>
+      <li><a href="ttp://jsbin.com/xeyaqe/1/edit?html,js,output">Añadir popup</a></li>
+    </ul></li>
+    <li><a href="http://jsbin.com/hosegi/1/edit">Gráfico de escaños</a>
+      <ul>
+        <li><a href="http://jsbin.com/ravudu/1/edit">Añadir animación</a></li>
+        <li><a href="http://jsbin.com/rijuqo/1/edit">Añadir leyenda</a></li>
+      </ul></li>
+    <li><a href="http://jsbin.com/xulawa/1/edit">Mapa sencillo</a>
+      <ul>
+        <li><a href="http://jsbin.com/qaviba/1/edit">Añadir gratícula</a></li>
+        <li><a href="http://jsbin.com/danume/1/edit">Usar Canvas</a></li>
+        <li><a href="http://jsbin.com/zageqe/1/edit">Usar Globe</a></li>
+      </ul>
+    </li>
+    <li><a href="http://jsbin.com/ruhebu/2/edit">Mapa con círculos <i>Bubble map</i></a></li>
+    <li><a href="http://jsbin.com/kegulo/2/edit?html,js,output">Mapa de coropletas</a>
+      <ul>
+        <li><a href="http://jsbin.com/vutiqo/2/edit">Añadir popup</a></li>
+      </ul>
+    </li>
+  </ul>
+</section>
 <link rel="stylesheet" type="text/css" href="highlight/styles/monokai_sublime.css"> 
 <script type="text/javascript" src="highlight/highlight.pack.js"></script>
 <script>
@@ -616,7 +644,6 @@ mark.blue {
     }
 
   function stopTools(){
-    console.info("stop");
     var svg = d3.select("#toolsDiv").selectAll("svg");
     svg.remove();
 
@@ -704,7 +731,6 @@ mark.blue {
 
 
   function stopTools2(){
-    console.info("stop");
     var svg = d3.select("#tools2Div").selectAll("svg");
     svg.remove();
 
@@ -824,10 +850,9 @@ mark.blue {
   
 
   function stopLayouts(){
-    console.info("stop");
-    var svg = d3.select("#LayoutsDiv").selectAll("svg");
+    
+    var svg = d3.select("#layoutsDiv").selectAll("svg");
     svg.remove();
-
   }
 
 </script>
