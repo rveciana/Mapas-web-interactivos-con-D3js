@@ -359,9 +359,12 @@ mark.blue {
     .style("fill", "red");</code></pre>
 </section>
 
-<section>
+<section id="layouts">
   <h3 class="blue">Layouts</h3>
-  <a href="http://d3js.org/"><img src="layouts.jpg"/></a>
+
+  <div id="layoutsDiv"></div>
+  <div id="layoutsTitle"></div>
+  <pre><code class="JavaScript" id="layoutsCode"></code></pre>
 </section>
 <section>
   <h3 class="blue">Funciones Geográficas</h3>
@@ -394,15 +397,20 @@ mark.blue {
 
   var tools2 = d3.select("#tools2");
   var tools2Index = section[0].indexOf(tools2.node());
+
+  var layouts = d3.select("#layouts");
+  var layoutsIndex = section[0].indexOf(layouts.node());
  
   function activate(d, i) {
     if (i === toolsIndex) startTools();
     if (i === tools2Index) startTools2();
+    if (i === layoutsIndex) startLayouts();
   }
 
   function deactivate(d, i) {
     if (i === toolsIndex) stopTools();
     if (i === tools2Index) stopTools2();
+    if (i === layoutsIndex) stopLayouts();
   }
 
   
@@ -606,19 +614,6 @@ mark.blue {
     });
     }
 
-  /*
-
-    <li>Herramientas para gráficos
-      <ul>
-      <li>Escalas</li>
-      <li>Ejes</li>
-      <li>Funciones de tiempo</li>
-      <li>Funciones con colores</li>
-    </ul>
-  </li>
-  <li>Layouts</li>
-  <li>Funciones Geográficas</li>
-  */
   function stopTools(){
     console.info("stop");
     var svg = d3.select("#toolsDiv").selectAll("svg");
@@ -710,6 +705,126 @@ mark.blue {
   function stopTools2(){
     console.info("stop");
     var svg = d3.select("#tools2Div").selectAll("svg");
+    svg.remove();
+
+  }
+
+
+  function startLayouts(){
+    var num_click = 0;
+    var title = d3.select("#layoutsTitle");
+    title.text("Layout hecho a mano");
+    var code = d3.select("#layoutsCode");
+
+    var svg = d3.select("#layoutsDiv").append("svg")
+    .attr("width", 200)
+    .attr("height", 200);
+
+    var fill = d3.scale.category10();
+
+    svg.selectAll("circle")
+    .data([32, 57, 112])
+    .enter()
+    
+    .append("circle")
+    .attr("cy", 100)
+    .attr("cx", function(d, i) { return i * 50 + 10; })
+    .attr("r", function(d) { return Math.sqrt(d); })
+    .style("fill", function(d){return fill(d);});
+
+    svg.on("click", function(d) {
+        num_click++;
+        if(num_click==1){
+            title.text("Force Layout");
+
+            function tick(e) {
+               node.attr("cx", function(d) { return d.x; })
+                  .attr("cy", function(d) { return d.y; });
+            }
+
+            var width = 300,
+                height = 200;
+
+            var fill = d3.scale.category10();
+            var scale = d3.scale.linear()
+                .domain([30, 120])
+                .range([10, 30]);
+              
+            var nodes = [32, 57, 112].map(function(d,i) {
+              return {index: i, value: d};
+            });
+              
+            var force = d3.layout.force()
+                .nodes(nodes)
+                .size([width, height])
+                .charge(function(d){return -1*d.value*1.1;})
+                .on("tick", tick)
+                .start();
+
+            var svg = d3.select("#layoutsDiv").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            var node = svg.selectAll(".node")
+                .data(nodes)
+              .enter().append("circle")
+                .attr("class", "node")
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; })
+                .attr("r", function(d){return scale(d.value);})
+                .style("fill", function(d, i) { return fill(d.value); })
+                .style("stroke", function(d, i) { return d3.rgb(fill(d.value)).darker(2); })
+                .call(force.drag)
+                .on("mousedown", function() { d3.event.stopPropagation(); });
+
+            svg.style("opacity", 1e-6)
+              .transition()
+                .duration(1000)
+                .style("opacity", 1);
+
+            
+        } else if(num_click==2){
+            title.text("Pie Layout");
+            var width = 200,
+            height = 200,
+            radius = Math.min(width, height) / 2;
+
+            var color = d3.scale.category10();
+              
+            var data = [32, 57, 112];
+              
+            var arc = d3.svg.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(0);
+              
+            var pie = d3.layout.pie()
+                .sort(null)
+                .value(function(d) {return d;});
+              
+
+             var svg = d3.select("#layoutsDiv").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+              .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+              
+              
+              var g = svg.selectAll(".arc")
+                  .data(pie(data))
+                .enter().append("g")
+                  .attr("class", "arc");
+
+              g.append("path")
+                  .attr("d", arc)
+                  .style("fill", function(d) {return color(d.data);});
+        }
+    });
+  }
+  
+
+  function stopLayouts(){
+    console.info("stop");
+    var svg = d3.select("#LayoutsDiv").selectAll("svg");
     svg.remove();
 
   }
