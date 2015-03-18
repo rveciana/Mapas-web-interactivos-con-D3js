@@ -717,13 +717,13 @@ mark.blue {
     title.text("Layout hecho a mano");
     var code = d3.select("#layoutsCode");
 
-    var svg = d3.select("#layoutsDiv").append("svg")
+    var svglayout = d3.select("#layoutsDiv").append("svg")
     .attr("width", 200)
     .attr("height", 200);
 
     var fill = d3.scale.category10();
 
-    svg.selectAll("circle")
+    svglayout.selectAll("circle")
     .data([32, 57, 112])
     .enter()
     
@@ -733,7 +733,7 @@ mark.blue {
     .attr("r", function(d) { return Math.sqrt(d); })
     .style("fill", function(d){return fill(d);});
 
-    svg.on("click", function(d) {
+    svglayout.on("click", function(d) {
         num_click++;
         if(num_click==1){
             title.text("Force Layout");
