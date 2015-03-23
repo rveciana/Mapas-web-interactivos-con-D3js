@@ -329,6 +329,30 @@ mark.blue {
     <li>Se pueden añadir estilos usando <i>style</i></li>
   </ul>
 </section>
+<section>
+  <h3 class="blue">El código entero otra vez</h3>
+  <pre>
+  <code class="javascript">
+  d3.select('#contenedor').selectAll("div")
+    .data([10, 20, 30])
+    .enter()
+    .append('div')
+    .text(function(d){return d;});
+  </code>
+  </pre>
+
+  <div id="contenedor"></div>
+
+  <script>
+  d3.select('#contenedor').selectAll("div")
+    .data([10, 20, 30])
+    .enter()
+    .append('div')
+    .text(function(d){return d;});
+    </script>
+    
+
+  </section>
 <section id="tools">
   <h3 class="blue">¿Que herramientas ofrece D3?</h3>
   
@@ -368,7 +392,6 @@ mark.blue {
 
   <div id="layoutsDiv"></div>
   <div id="layoutsTitle"></div>
-  <pre><code class="JavaScript" id="layoutsCode"></code></pre>
 </section>
 <section>
   <h3 class="blue">Funciones Geográficas</h3>
@@ -378,6 +401,12 @@ mark.blue {
     <li><a href="http://bl.ocks.org/mbostock/4090870">GeoJSON/TopoJSON</a></li>
     <li><a href="http://bl.ocks.org/mbostock/2206590">Áreas, longitudes, centroides</a> y <a href="http://bl.ocks.org/mbostock/4206810">otros cálculos sencillos</a> y <a href="http://bl.ocks.org/mbostock/4525362">no tan sencillos</a></li>
   </ul>
+  <pre><code class="XML"> &lt;svg height="210" width="400"&gt;
+  &lt;path d="M150 0 L75 100 L225 100 Z" fill="red"/&gt;
+&lt;/svg&gt; </code></pre>
+ <svg height="210" width="400">
+  <path d="M150 0 L75 100 L225 100 Z" fill="red" />
+</svg> 
 </section>
 <section>
 <h3 class="blue">Conclusiones</h3>
@@ -393,6 +422,7 @@ mark.blue {
     </ul>
   </li>
   <li>Visualizar datos es difícil</li>
+  <li>Manipular nodos es difícil y lento</li>
 </ul>
 </section>
 <section>
@@ -519,8 +549,7 @@ mark.blue {
             .selectAll(\"circle\")\n\
             .attr(\"r\", function(d) { return Math.sqrt(d) + 5; });\n\
             });\n\
-            svg.on('mouseout', function(d){\n\
-            \n\
+svg.on('mouseout', function(d){\n\
             d3.select(this)\n\
             .selectAll(\"circle\")\n\
             .attr(\"r\", function(d) { return Math.sqrt(d); });\n\
@@ -766,7 +795,7 @@ mark.blue {
           svg.selectAll("circle")
           .transition()
           .duration(2000)
-          .style("fill", function(d) { return d3.rgb(colorScale(d)).brighter(); });
+          .style("fill", function(d) { return d3.rgb(colorScale(d)).brighter().brighter().brighter(); });
           
         }
     });
@@ -784,7 +813,7 @@ mark.blue {
     var num_click = 0;
     var title = d3.select("#layoutsTitle");
     title.text("Layout hecho a mano");
-    var code = d3.select("#layoutsCode");
+    
 
     var svglayout = d3.select("#layoutsDiv").append("svg")
     .attr("width", 200)
